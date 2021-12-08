@@ -12,28 +12,31 @@ func main() {
     
     let lines = inputString.components(separatedBy: "\n")
         .filter { !$0.isEmpty }
-    
-    // Sample algorithm
-    var scoreboard = [String: Int]()
-    lines.forEach { line in
-        let (name, score) = parseLine(line)
-        scoreboard[name] = score
-    }
-    scoreboard
-        .sorted { lhs, rhs in
-            lhs.value > rhs.value
-        }
-        .forEach { name, score in
-            print("\(name) \(score) pts")
-        }
-}
 
-func parseLine(_ line: String) -> (name: String, score: Int) {
-    let helper = RegexHelper(pattern: #"([\-\w]*)\s(\d+)"#)
-    let result = helper.parse(line)
-    let name = result[0]
-    let score = Int(result[1])!
-    return (name: name, score: score)
+
+    let result = lines.reduce(0) { partialResult, line in
+        partialResult + line
+            .components(separatedBy: " | ")
+            .last!
+            .components(separatedBy: " ")
+            .filter { [2, 3, 4, 7].contains($0.count) }
+            .count
+    }
+
+    print(result)
 }
 
 main()
+
+/*
+ 0 (6): abcefg
+ 1 (2): cf
+ 2 (5): acdeg
+ 3 (5): acdfg
+ 4 (4): bcdf
+ 5 (5): abdfg
+ 6 (6): abdefg
+ 7 (3): acf
+ 8 (7): abcdefg
+ 9 (6): abcdfg
+ */
